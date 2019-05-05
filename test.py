@@ -71,9 +71,10 @@ def possible_nodes(start_finish, visited):
 def main():
     process = psutil.Process(os.getpid())
     matris = []
-    number_city = 10
+    number_city = 6
 
-    origin_destination = {1: 6, 2: 7, 3: 8, 4: 9, 5: 10}
+    origin_destination = {1: 4, 2: 5, 3: 6}
+    #origin_destination = {1: 6, 2: 7, 3: 8, 4: 9, 5: 10}
 
     for i in range(number_city):
         abas = []
@@ -94,49 +95,49 @@ def main():
     c1 = Node(1, [1], 10)
     c2 = Node(2, [2], 10)
     c3 = Node(3, [3], 10)
-    c4 = Node(4, [4], 10)
-    c5 = Node(5, [5], 10)
+    #c4 = Node(4, [4], 10)
+    #c5 = Node(5, [5], 10)
     mother_node.add_child(c1)
     mother_node.add_child(c2)
     mother_node.add_child(c3)
-    mother_node.add_child(c4)
-    mother_node.add_child(c5)
+    #mother_node.add_child(c4)
+    #mother_node.add_child(c5)
     for c in mother_node.get_child():
         c.print_data()
-    
+
 
     results = list()
     queue = list()
     queue.append(c1)
     queue.append(c2)
     queue.append(c3)
-    queue.append(c4)
-    queue.append(c5)
-    a = 0
+    #queue.append(c4)
+    #queue.append(c5)
+    number_of_nodes = 0
 
-    startTime = datetime.now()
+    start_time = datetime.now()
     while(len(queue)!=0):
-        a = a+1
+        number_of_nodes = number_of_nodes+1
         temp_node = queue.pop(0)
         if temp_node.create_children():
             queue.extend(temp_node.get_child())
         else:
             results.append(temp_node)
-    
+
     # sort the list by distance
     results.sort(key=lambda x: x.distance, reverse=True)
-    print('total nodes:', a)
+    print('total nodes:', number_of_nodes, ' - total ways to travers:', len(results))
 
     first, last = results[0], results[-1]
     first.print_data()
     last.print_data()
     print('total size:', process.memory_info().rss/1024)
-    print('total time:', datetime.now() - startTime)
+    print('total time:', datetime.now() - start_time)
 
 
 
 
 if __name__ == "__main__":
-    
+
     main()
     
