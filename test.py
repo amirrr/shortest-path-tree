@@ -2,6 +2,10 @@ import time
 from tqdm import tqdm
 import random
 import numpy as np
+from sys import getsizeof
+from datetime import datetime
+
+
 # using tqdm on itterable elemets let you see progress bar for it
 
 #for i in tqdm(range(10)):
@@ -65,7 +69,7 @@ def main():
     matris = []
     number_city = 10
 
-    origin_destination = {1: 5, 2: 6, 3: 7, 4: 9, 5: 10 }
+    origin_destination = {1: 6, 2: 7, 3: 8, 4: 9, 5: 10 }
 
     for i in range(number_city):
         abas = []
@@ -86,14 +90,16 @@ def main():
     c1 = Node(1, [1], 10)
     c2 = Node(2, [2], 10)
     c3 = Node(3, [3], 10)
-    c4 = Node(4, [1], 10)
-    c5 = Node(5, [1], 10)
+    c4 = Node(4, [4], 10)
+    c5 = Node(5, [5], 10)
     mother_node.add_child(c1)
     mother_node.add_child(c2)
     mother_node.add_child(c3)
     mother_node.add_child(c4)
     mother_node.add_child(c5)
-    mother_node.print_data()
+    for c in mother_node.get_child():
+        c.print_data()
+    
 
     results = list()
     queue = list()
@@ -103,6 +109,8 @@ def main():
     queue.append(c4)
     queue.append(c5)
     a = 0
+
+    startTime = datetime.now()
     while(len(queue)!=0):
         a = a+1
         temp_node = queue.pop(0)
@@ -115,8 +123,13 @@ def main():
     results.sort(key=lambda x: x.distance, reverse=True)
     print('total nodes:', a)
 
-    #for r in results:
-    #    r.print_data()
+    first, last = results[0], results[-1]
+    first.print_data()
+    last.print_data()
+    print('total time:', datetime.now() - startTime)
+
+
+
 
 if __name__ == "__main__":
     main()
