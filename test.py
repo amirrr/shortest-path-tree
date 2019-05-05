@@ -15,8 +15,9 @@ class Node(object):
     def __init__(self, data, vtd, distance):
         self.data = data
         self.children = []
-        self.visited = set()
-        self.visited.update(vtd)
+        #self.visited = set()
+        self.visited = []
+        self.visited.extend(vtd)
         self.distance = distance
 
     def create_children(self):
@@ -24,12 +25,12 @@ class Node(object):
         univisited_set = possible_nodes(Node.source_dest, self.visited)
         if len(univisited_set) != 0:
             for i in univisited_set:
-                temp_visited_set = set(self.visited)
-                temp_visited_set.add(i)
+                temp_visited_set = list(self.visited)
+                temp_visited_set.append(i)
                 temp_distance = self.distance + Node.distance_matix[self.data-1][i-1]
                 node = Node(i, temp_visited_set, temp_distance)
                 self.children.append(node)
-            return self.children
+            return True
         else:
             return False
 
@@ -44,10 +45,10 @@ class Node(object):
 
     def print_data(self):
         """ print list of children """
-        print('mother:', self.data, '----> ', end='')
-        for child in self.children:
-            print(child.data, end=' ')
-        print('')
+        print('order of travers:', self.visited, '----> ', self.distance)
+        #for child in self.children:
+        #    print(child.data, child.visited, child.distance, end='\t')
+        #print('')
 
 def possible_nodes(start_finish, visited):
     """ look for possible node expantion based on visited nodes """
@@ -62,9 +63,9 @@ def possible_nodes(start_finish, visited):
 
 def main():
     matris = []
-    number_city = 6
+    number_city = 10
 
-    origin_destination = {1: 4, 2: 5, 3: 6}
+    origin_destination = {1: 5, 2: 6, 3: 7, 4: 9, 5: 10 }
 
     for i in range(number_city):
         abas = []
@@ -85,20 +86,37 @@ def main():
     c1 = Node(1, [1], 10)
     c2 = Node(2, [2], 10)
     c3 = Node(3, [3], 10)
+    c4 = Node(4, [1], 10)
+    c5 = Node(5, [1], 10)
     mother_node.add_child(c1)
     mother_node.add_child(c2)
     mother_node.add_child(c3)
+    mother_node.add_child(c4)
+    mother_node.add_child(c5)
     mother_node.print_data()
 
-    #print(possible_nodes(origin_destination, c1.visited))
+    results = list()
+    queue = list()
+    queue.append(c1)
+    queue.append(c2)
+    queue.append(c3)
+    queue.append(c4)
+    queue.append(c5)
+    a = 0
+    while(len(queue)!=0):
+        a = a+1
+        temp_node = queue.pop(0)
+        if temp_node.create_children():
+            queue.extend(temp_node.get_child())
+        else:
+            results.append(temp_node)
+    
+    # sort the list by distance
+    results.sort(key=lambda x: x.distance, reverse=True)
+    print('total nodes:', a)
 
-    c1child = c1.create_children()
-    c1.print_data()
-
-    for i in c1child:
-        i.create_children()
-        i.print_data()
-
+    #for r in results:
+    #    r.print_data()
 
 if __name__ == "__main__":
     main()
