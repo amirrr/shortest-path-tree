@@ -4,6 +4,9 @@ import random
 import numpy as np
 from sys import getsizeof
 from datetime import datetime
+import os
+import psutil
+
 
 
 # using tqdm on itterable elemets let you see progress bar for it
@@ -66,10 +69,11 @@ def possible_nodes(start_finish, visited):
     return result
 
 def main():
+    process = psutil.Process(os.getpid())
     matris = []
     number_city = 10
 
-    origin_destination = {1: 6, 2: 7, 3: 8, 4: 9, 5: 10 }
+    origin_destination = {1: 6, 2: 7, 3: 8, 4: 9, 5: 10}
 
     for i in range(number_city):
         abas = []
@@ -126,10 +130,13 @@ def main():
     first, last = results[0], results[-1]
     first.print_data()
     last.print_data()
+    print('total size:', process.memory_info().rss/1024)
     print('total time:', datetime.now() - startTime)
 
 
 
 
 if __name__ == "__main__":
+    
     main()
+    
