@@ -52,7 +52,7 @@ class Node(object):
 
     def print_data(self):
         """ print list of children """
-        print('order of travers:', self.visited, '----> ', self.distance)
+        print('order of travers:', self.visited, '----> distance:', self.distance)
         #for child in self.children:
         #    print(child.data, child.visited, child.distance, end='\t')
         #print('')
@@ -102,9 +102,6 @@ def main():
     mother_node.add_child(c3)
     #mother_node.add_child(c4)
     #mother_node.add_child(c5)
-    for c in mother_node.get_child():
-        c.print_data()
-
 
     results = list()
     queue = list()
@@ -125,7 +122,9 @@ def main():
             results.append(temp_node)
 
     # sort the list by distance
-    results.sort(key=lambda x: x.distance, reverse=True)
+    results.sort(key=lambda x: x.distance, reverse=False)
+    #for r in results:
+    #   print(r.visited, ' distance:', r.distance)
     print('total nodes:', number_of_nodes, ' - total ways to travers:', len(results))
 
     first, last = results[0], results[-1]
