@@ -1,14 +1,14 @@
-import time
-from tqdm import tqdm
-import random
-import numpy as np
-from sys import getsizeof
 from datetime import datetime
+import random
 import os
+import numpy as np
 import psutil
+import pandas
+import matplotlib.pyplot as plt
+from table import checkerboard_table
 
 
-
+# from tqdm import tqdm
 # using tqdm on itterable elemets let you see progress bar for it
 
 #for i in tqdm(range(10)):
@@ -144,11 +144,17 @@ def main():
             y = path.visited[i+1] - 1
             temp_matris[x][y] = 0
 
+    data1 = pandas.DataFrame(np.matrix(temp_matris))
+    #data2 = pandas.DataFrame(np.matrix(matris))
+    checkerboard_table(data1, matris)
+
     print(np.matrix(matris))
     print(np.matrix(temp_matris))
 
+    print('max in matrix:', max(max(matris)))
     print('total size:', process.memory_info().rss/1024)
     print('total time:', datetime.now() - start_time)
+    plt.show()
 
 
 
