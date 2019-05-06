@@ -127,9 +127,26 @@ def main():
     #   print(r.visited, ' distance:', r.distance)
     print('total nodes:', number_of_nodes, ' - total ways to travers:', len(results))
 
-    first, last = results[0], results[-1]
-    first.print_data()
+    first, last = results[:int(len(results)*.1)], results[-1]
+
+    for f in first:
+        print('shortest distance ', end='')
+        f.print_data()
+    #first.print_data()
+    print('longest distance ', end='')
     last.print_data()
+
+    temp_matris = list(map(list, matris))
+
+    for path in first:
+        for i in range(number_city-1):
+            x = path.visited[i] - 1
+            y = path.visited[i+1] - 1
+            temp_matris[x][y] = 0
+
+    print(np.matrix(matris))
+    print(np.matrix(temp_matris))
+
     print('total size:', process.memory_info().rss/1024)
     print('total time:', datetime.now() - start_time)
 
