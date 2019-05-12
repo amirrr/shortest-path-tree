@@ -127,7 +127,7 @@ def main():
     #   print(r.visited, ' distance:', r.distance)
     print('total nodes:', number_of_nodes, ' - total ways to travers:', len(results))
 
-    first, last = results[:int(len(results)*.1)], results[-1]
+    first, last = results[:1], results[-1]
 
     for f in first:
         print('shortest distance ', end='')
@@ -151,7 +151,17 @@ def main():
     print(np.matrix(matris))
     print(np.matrix(temp_matris))
 
-    print('max in matrix:', max(max(matris)))
+    maxm = 0
+    for i in matris:
+        for j in i:
+            if j >= maxm:
+                maxm = j
+
+    for i in temp_matris:
+        if maxm in i:
+            print('haleluya')
+
+    print('max in matrix:', maxm)
     print('total size:', process.memory_info().rss/1024)
     print('total time:', datetime.now() - start_time)
     plt.show()
