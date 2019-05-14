@@ -68,17 +68,33 @@ def possible_nodes(start_finish, visited):
             result.add(start)       # if start is not visited its a possible node to visit
     return result
 
+def generate_mother_node(number_of_users):
+
+    ori_dest = {}
+    mother_node = Node(0, [], 0)
+
+    for user in range(1, number_of_users+1):
+        ori_dest[user] = number_of_users + user
+        mother_node.add_child(Node(user, [user], 10))
+    
+    # c1 = Node(1, [1], 10)
+    # c2 = Node(2, [2], 10)
+    # c3 = Node(3, [3], 10)
+    # mother_node.add_child(c1)
+    # mother_node.add_child(c2)
+    # mother_node.add_child(c3)
+
+    return ori_dest, mother_node
+
+
 def main():
     process = psutil.Process(os.getpid())
     matris = []
     number_city = 6
 
-    origin_destination = {1: 4, 2: 5, 3: 6}
-    #origin_destination = {1: 6, 2: 7, 3: 8, 4: 9, 5: 10}
-
-    for i in range(number_city):
+    for i in range(number_city*2):
         abas = []
-        for j in range(number_city):
+        for j in range(number_city*2):
             if i == j:
                 abas.append(0)
             else:
@@ -86,30 +102,16 @@ def main():
         matris.append(abas)
 
     print(np.matrix(matris))
-    # print()
-
+    
+    mother = Node(0, [], 0)
+    origin_destination, mother = generate_mother_node(number_city)
     Node.source_dest = origin_destination
     Node.distance_matix = matris
 
-    mother_node = Node(0, [], 0)
-    c1 = Node(1, [1], 10)
-    c2 = Node(2, [2], 10)
-    c3 = Node(3, [3], 10)
-    #c4 = Node(4, [4], 10)
-    #c5 = Node(5, [5], 10)
-    mother_node.add_child(c1)
-    mother_node.add_child(c2)
-    mother_node.add_child(c3)
-    #mother_node.add_child(c4)
-    #mother_node.add_child(c5)
 
     results = list()
     queue = list()
-    queue.append(c1)
-    queue.append(c2)
-    queue.append(c3)
-    #queue.append(c4)
-    #queue.append(c5)
+    queue.extend(mother.get_child())
     number_of_nodes = 0
 
     start_time = datetime.now()
@@ -172,4 +174,3 @@ def main():
 if __name__ == "__main__":
 
     main()
-    
