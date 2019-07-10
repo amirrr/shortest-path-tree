@@ -19,6 +19,8 @@ class Node(object):
     """Return the square root of self times self."""
     source_dest = {}
     distance_matix = []
+    max_distance = 0
+
     def __init__(self, data, vtd, distance):
         self.data = data
         self.children = []
@@ -32,9 +34,11 @@ class Node(object):
         univisited_set = possible_nodes(Node.source_dest, self.visited)
         if len(univisited_set) != 0:
             for i in univisited_set:
+                # if Node.distance_matix[self.data-1][i-1] == Node.max_distance:
+                #     continue
+                temp_distance = self.distance + Node.distance_matix[self.data-1][i-1]
                 temp_visited_set = list(self.visited)
                 temp_visited_set.append(i)
-                temp_distance = self.distance + Node.distance_matix[self.data-1][i-1]
                 node = Node(i, temp_visited_set, temp_distance)
                 self.children.append(node)
             return True
@@ -76,13 +80,6 @@ def generate_mother_node(number_of_users):
     for user in range(1, number_of_users+1):
         ori_dest[user] = number_of_users + user
         mother_node.add_child(Node(user, [user], 10))
-    
-    # c1 = Node(1, [1], 10)
-    # c2 = Node(2, [2], 10)
-    # c3 = Node(3, [3], 10)
-    # mother_node.add_child(c1)
-    # mother_node.add_child(c2)
-    # mother_node.add_child(c3)
 
     return ori_dest, mother_node
 
@@ -90,23 +87,30 @@ def generate_mother_node(number_of_users):
 def main():
     process = psutil.Process(os.getpid())
     matris = []
-    number_city = 6
+    number_users = 3
+    number_city = number_users*2
 
-    for i in range(number_city*2):
+    for i in range(number_city):
         abas = []
-        for j in range(number_city*2):
+        for j in range(number_city):
             if i == j:
                 abas.append(0)
             else:
                 abas.append(random.randint(5, 30))
         matris.append(abas)
 
-    print(np.matrix(matris))
+    print('distance matris created!')
+    max_dis = 0
+    for i in matris:
+        for j in i:
+            if j > max_dis:
+                max_dis = j
     
     mother = Node(0, [], 0)
-    origin_destination, mother = generate_mother_node(number_city)
+    origin_destination, mother = generate_mother_node(number_users)
     Node.source_dest = origin_destination
     Node.distance_matix = matris
+    Node.max_distance = max_dis
 
 
     results = list()
@@ -123,37 +127,33 @@ def main():
         else:
             results.append(temp_node)
 
+    print('nodes created finding shortest path')
+    
     # sort the list by distance
-    results.sort(key=lambda x: x.distance, reverse=False)
-    #for r in results:
-    #   print(r.visited, ' distance:', r.distance)
+    #results.sort(key=lambda x: x.distance, reverse=False)
+    first = min(results, key=lambda x: x.distance)
+
     print('total nodes:', number_of_nodes, ' - total ways to travers:', len(results))
 
-    first, last = results[:1], results[-1]
+    #first, last = results[:1], results[-1]
 
-    for f in first:
-        print('shortest distance ', end='')
-        f.print_data()
-    #first.print_data()
-    print('longest distance ', end='')
-    last.print_data()
+    print('shortest distance ', end='')
+    first.print_data()
 
     temp_matris = list(map(list, matris))
 
-    for path in first:
-        for i in range(number_city-1):
-            x = path.visited[i] - 1
-            y = path.visited[i+1] - 1
-            temp_matris[x][y] = 0
+    for i in range(number_city-1):
+        x = first.visited[i] - 1
+        y = first.visited[i+1] - 1
+        temp_matris[x][y] = 0
 
     data1 = pandas.DataFrame(np.matrix(temp_matris))
-    #data2 = pandas.DataFrame(np.matrix(matris))
     checkerboard_table(data1, matris)
 
-    print(np.matrix(matris))
-    print(np.matrix(temp_matris))
+    #print(np.matrix(matris))
+    #print(np.matrix(temp_matris))
 
-    print('max in matrix:', max(max(matris)))
+    print('max in matrix:', max_dis)
     print('total size:', process.memory_info().rss/1024)
     print('total time:', datetime.now() - start_time)
     plt.show()
