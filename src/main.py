@@ -153,7 +153,17 @@ def main():
     #print(np.matrix(matris))
     #print(np.matrix(temp_matris))
 
-    print('max in matrix:', max_dis)
+    maxm = 0
+    for i in matris:
+        for j in i:
+            if j >= maxm:
+                maxm = j
+
+    for i in temp_matris:
+        if maxm in i:
+            print('haleluya')
+
+    print('max in matrix:', maxm)
     print('total size:', process.memory_info().rss/1024)
     print('total time:', datetime.now() - start_time)
     plt.show()
